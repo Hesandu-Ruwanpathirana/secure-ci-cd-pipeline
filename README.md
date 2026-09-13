@@ -2,7 +2,7 @@
 
 A demo Python project with an automated CI/CD pipeline that scans code for security vulnerabilities on every push, using GitHub Actions, Bandit, and Trivy.
 
-![Security Scan](https://github.com/YOUR-USERNAME/secure-ci-cd-pipeline/actions/workflows/security-scan.yml/badge.svg)
+![Security Scan](https://github.com/Hesandu-Ruwanpathirana/secure-ci-cd-pipeline/actions/workflows/security-scan.yml/badge.svg)
 
 ## What this project demonstrates
 
@@ -62,7 +62,7 @@ secure-ci-cd-pipeline/
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR-USERNAME/secure-ci-cd-pipeline.git
+git clone https://github.com/Hesandu-Ruwanpathirana/secure-ci-cd-pipeline.git
 cd secure-ci-cd-pipeline
 
 # Install Bandit and run it
