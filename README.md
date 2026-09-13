@@ -47,16 +47,16 @@ secure-ci-cd-pipeline/
 ## Proof it works
 
 ### ❌ Failing run (vulnerabilities present)
-*(screenshot of the failed GitHub Actions run goes here)*
+![Failing GitHub Actions run](screenshots/failing%20run.png)
 
 **Bandit output:**
-*(screenshot of local Bandit run showing 5 findings)*
+![Bandit local scan output](screenshots/bandit%20output.png)
 
 **Trivy output:**
-*(screenshot of local Trivy run showing 5 CVEs in requests)*
+![Trivy local scan output](screenshots/trivy%20output.png)
 
 ### ✅ Passing run (after fixes)
-*(screenshot of the passing GitHub Actions run goes here, once you fix the flaws and push again)*
+![Passing GitHub Actions run](screenshots/passing%20run.png)
 
 ## How to run this locally
 
