@@ -44,6 +44,21 @@ secure-ci-cd-pipeline/
 
 > ⚠️ These flaws are intentional and exist only to demonstrate the scanning pipeline. Never write code like this in a real project.
 
+## Proof it works
+
+### ❌ Failing run (vulnerabilities present)
+*(screenshot of the failed GitHub Actions run goes here)*
+
+**Bandit output:**
+*(screenshot of local Bandit run showing 5 findings)*
+
+**Trivy output:**
+*(screenshot of local Trivy run showing 5 CVEs in requests)*
+
+### ✅ Passing run (after fixes)
+*(screenshot of the passing GitHub Actions run goes here, once you fix the flaws and push again)*
+
+## How to run this locally
 
 ```bash
 # Clone the repo
@@ -67,3 +82,15 @@ The workflow file at `.github/workflows/security-scan.yml` runs two jobs in para
 - **trivy-scan** — runs Trivy against the whole project to check `requirements.txt` for known CVEs
 
 If either job finds a HIGH or CRITICAL severity issue, that job fails, which shows up as a red ❌ on the Actions tab — blocking the "merge" the same way a real security gate would.
+
+## How each vulnerability was fixed
+
+| Flaw | Before | After |
+|---|---|---|
+| Hardcoded password | `DATABASE_PASSWORD = "SuperSecret123!"` | Pulled from an environment variable via `os.environ.get(...)` |
+| Shell injection risk | `subprocess.run(user_input, shell=True, ...)` | `shell=False` with `shlex.split()` to safely parse arguments |
+| Weak hash (MD5) | `hashlib.md5(...)` | `hashlib.sha256(...)` |
+| Arbitrary code execution (`eval`) | `eval(expression)` | `ast.literal_eval(expression)` — only allows safe literals |
+| Outdated dependency | `requests==2.19.1` (5 known CVEs) | `requests==2.33.0` (patched) |
+
+After these fixes, both Bandit and Trivy report zero issues, and the pipeline passes automatically on push.

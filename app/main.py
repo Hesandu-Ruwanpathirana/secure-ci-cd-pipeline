@@ -1,46 +1,49 @@
 """
 A tiny sample app used to demonstrate an automated security pipeline.
 
-This file intentionally contains a few common security mistakes,
-so that Bandit (a Python security linter) has something real to catch
-when the CI/CD pipeline runs. Don't copy these patterns into real projects!
+This version has been FIXED — all intentional vulnerabilities from the
+original version have been corrected using security best practices.
 """
 
 import hashlib
+import os
+import shlex
 import subprocess
 
-# --- Intentional flaw #1: hardcoded credentials ---
-# Bandit flags this because secrets should never live in source code.
-DATABASE_PASSWORD = "SuperSecret123!"
+
+# --- Fix #1: no hardcoded password ---
+# Secrets should come from environment variables, not source code.
+DATABASE_PASSWORD = os.environ.get("DATABASE_PASSWORD", "")
 
 
 def get_user_input_command(user_input):
     """
-    --- Intentional flaw #2: shell injection risk ---
-    Using shell=True with unsanitized user input lets an attacker run
-    arbitrary commands on the server. Bandit flags this as high severity.
+    --- Fix #2: no shell injection risk ---
+    shell=True is removed, and the command is split safely with shlex
+    instead of being passed directly to a shell.
     """
-    result = subprocess.run(user_input, shell=True, capture_output=True)
+    args = shlex.split(user_input)
+    result = subprocess.run(args, shell=False, capture_output=True)
     return result.stdout
 
 
 def hash_password(password):
     """
-    --- Intentional flaw #3: weak/broken hash algorithm ---
-    MD5 is cryptographically broken and should never be used for passwords.
-    Bandit flags this too.
+    --- Fix #3: strong hash algorithm ---
+    SHA-256 replaces the broken MD5 algorithm.
     """
-    return hashlib.md5(password.encode()).hexdigest()
+    return hashlib.sha256(password.encode()).hexdigest()
 
 
-def run_dangerous_eval(expression):
+def safe_expression_eval(expression):
     """
-    --- Intentional flaw #4: use of eval() ---
-    eval() executes arbitrary code, which is extremely dangerous if the
-    input isn't 100% trusted. Bandit flags this as well.
+    --- Fix #4: no eval() ---
+    Using ast.literal_eval only allows safe Python literals
+    (numbers, strings, lists, etc.) — no arbitrary code execution.
     """
-    return eval(expression)
+    import ast
+    return ast.literal_eval(expression)
 
 
 if __name__ == "__main__":
-    print("This is a sample app with intentional security flaws for demo purposes.")
+    print("This is the fixed, secure version of the sample app.")
